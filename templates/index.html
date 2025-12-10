@@ -3,8 +3,7 @@
 {% block body %}
 <h4 class="opa_4">Pimp my map</h3>
 <h1 class="display-1">Page de connexion</h1>
-{{ users[0] }}
-<form action={{url_for('apiLogin')}} method="POST" id="form">
+<form action={{url_for('apiAddUser')}} method="POST" id="form">
     <div class="row m-5 me-5 mb-1 mt-1"></div>
 
     <div class="row m-5 me-5 mb-1 mt-1">
@@ -33,10 +32,10 @@
         $('#form').submit(function(e){
             var form = $(this);
             e.preventDefault()
-            fetch("{{ url_for('apiLogin') }}", {
+            fetch("{{ url_for('apiAddUser') }}", {
                 method : 'POST',
                 headers : {'Content-Type' : 'application/json; charset=utf-8'},
-                body : JSON.stringify({name : 'Cuvelier', pw : 'a'})
+                body : JSON.stringify({lastname : 'Sirjean', firstname : 'Arnaud'})
             })
             .then(response => response.json())
             .then(data => console.log(data))

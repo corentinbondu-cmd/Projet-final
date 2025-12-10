@@ -14,12 +14,13 @@ class UserDAO:
             userDTOs.append(dto)
         return userDTOs
     
-    def add_user(self):
+    def add_user(self, firstname, lastname, login):
         db = self.bdd['Project']
-        lastId = list(db.users.aggregate([
-            {'$sort' : {'_id' : -1}},
-            {'$limit' : 1}]))
-        newUser = UserDTO(lastId[0]['_id'] + 1, 'Andre', 'Mifasol', '', '', '', '', '')
-        print(newUser)
-        db.users.insert_one(newUser.__dict__)
-        return newUser
+        if 'users' not in db.list_collection_names():
+            db.create_collection('users')
+        newId = db.users.count_documents({}) + 1
+        if not list(db.users.find({'login' : login})):
+            newUser = UserDTO(newId, firstname, lastname, '', '', '', login, '')
+            db.users.insert_one(newUser.__dict__)
+            return newUser
+        return 'already exist'
