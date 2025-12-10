@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Accueil{% endblock %}
+{% block body %}
+<h4 class="opa_4">Pimp my map</h3>
+<h1 class="display-1">Page de connexion</h1>
+{{ users[0] }}
+<form action={{url_for('apiLogin')}} method="POST" id="form">
+    <div class="row m-5 me-5 mb-1 mt-1"></div>
+
+    <div class="row m-5 me-5 mb-1 mt-1">
+    <div class="col-3"></div>
+    <div class="col-6  bg-info text-light me-1">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Identifiant"/>
+    <div class="col-3"></div>
+
+    <div class="row m-5 me-5 mb-1 mt-1"></div>
+    <div class="row m-5 me-5 mb-1 mt-1">
+    <div class="col-3"></div>
+    <div class="col-6  bg-info text-light me-1">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Mot de passe"/>
+    <div class="col-3"></div>
+    </div>
+    </div>
+    <input type="submit" value="Sign in" />
+    </div>
+</form>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function(){
+        $('#form').submit(function(e){
+            var form = $(this);
+            e.preventDefault()
+            fetch("{{ url_for('apiLogin') }}", {
+                method : 'POST',
+                headers : {'Content-Type' : 'application/json; charset=utf-8'},
+                body : JSON.stringify({name : 'Cuvelier', pw : 'a'})
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+        })
+    })  
+</script>
+{% endblock %}
