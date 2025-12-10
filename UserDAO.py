@@ -14,6 +14,11 @@ class UserDAO:
             userDTOs.append(dto)
         return userDTOs
     
+    def get_one_user_by_login(self, login):
+        db = self.bdd['Project']
+        result =  list(db.users.find({'login' : login}))
+        return result
+
     def add_user(self, firstname, lastname, login):
         db = self.bdd['Project']
         if 'users' not in db.list_collection_names():
@@ -24,3 +29,9 @@ class UserDAO:
             db.users.insert_one(newUser.__dict__)
             return newUser
         return 'already exist'
+    
+    def upadte_user(self, login, pw):
+        db = self.bdd['Project']
+        db.users.update_one({'login' : login}, {'$set' : {
+            'password' : pw}
+        })

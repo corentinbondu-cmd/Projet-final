@@ -1,45 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Accueil{% endblock %}
+{% block title %}Administrateur{% endblock %}
 {% block body %}
-<h4 class="opa_4">Pimp my map</h3>
-<h1 class="display-1">Page de connexion</h1>
-<form action={{url_for('apiAddUser')}} method="POST" id="form">
+{% if session['login'] %}
+<h1>vous êtes {{session['login']}}</h1>
+<button onclick="logout()">deconnection</button>
+{% else %}
+<form action={{url_for('apiLogin')}} method="POST" id="form">
     <div class="row m-5 me-5 mb-1 mt-1"></div>
 
     <div class="row m-5 me-5 mb-1 mt-1">
     <div class="col-3"></div>
     <div class="col-6  bg-info text-light me-1">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" placeholder="Identifiant"/>
+        <label for="login">login:</label>
+        <input type="text" id="login" name="login"/>
     <div class="col-3"></div>
 
     <div class="row m-5 me-5 mb-1 mt-1"></div>
     <div class="row m-5 me-5 mb-1 mt-1">
     <div class="col-3"></div>
     <div class="col-6  bg-info text-light me-1">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Mot de passe"/>
+        <label for="password">password:</label>
+        <input type="text" id="password" name="password"/>
     <div class="col-3"></div>
     </div>
     </div>
-    <input type="submit" value="Sign in" />
+    <input type="submit" value="Ajouter" />
     </div>
 </form>
+{% endif %}
 {% endblock %}
 {% block script %}
 <script>
     $(document).ready(function(){
         $('#form').submit(function(e){
-            var form = $(this);
             e.preventDefault()
-            fetch("{{ url_for('apiAddUser') }}", {
-                method : 'POST',
+            var form = $(this);
+             fetch(form.attr('action'), {
+                method : form.attr('method'),
                 headers : {'Content-Type' : 'application/json; charset=utf-8'},
-                body : JSON.stringify({lastname : 'Sirjean', firstname : 'Arnaud'})
+                body : JSON.stringify({login : $('#login').val(), password : $('#password').val()})
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {if (typeof data['error'] == 'undefined'){location.reload()}})
         })
-    })  
+    })
+    function logout(){
+        fetch("{{ url_for('apiLogout') }}")
+            .then(response => response.json())
+            .then(data => {if (data['isOk'] == true){location.reload()}})
+    }  
 </script>
 {% endblock %}
