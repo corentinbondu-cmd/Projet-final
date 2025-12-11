@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block body %}
+<button onclick="addUserCSV()">user.csv</button>
+{% endblock %}
+{% block script %}
+<script>
+    function addUserCSV(){
+        fetch("{{ url_for('apiAddUserCSV') }}",{
+            method : 'POST'
+        })
+        .then(response => response.json())
+        .then(datas => {
+            if (datas['isOk']){
+                console.log('Ajout via CSV effectué')
+            }else{
+                console.log('Echec de l\'ajout')
+            }
+        })
+    }
+</script>
+{% endblock %}

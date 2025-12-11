@@ -1,10 +1,12 @@
 class MissionDTO:
 
-    def __init__(self, id, nom, pays, chef):
+    def __init__(self, id, nom, pays, chef, users, branchMissions):
         self._id = id
         self.nom = nom
         self.pays = pays
         self.chef = chef
+        self.users = users
+        self.branchMissions = branchMissions
 
     def __str__(self):
         return f"""
