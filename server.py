@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, session
 import time, csv
 from flask_bcrypt import Bcrypt
 from UserDAO import UserDAO
+from MissionDAO import MissionDAO
 from pymongo import *
 
 HTTP = 8080
@@ -13,6 +14,15 @@ bcrypt = Bcrypt(app)
 def index():
     '''apiAddUserCSV()'''
     return render_template('index.html')
+
+@app.route("/map/")
+def map():
+    return render_template('map.html')
+
+@app.route("/liste-missions/")
+def missions():
+    missions = MissionDAO(MongoClient()).get_all_mission()
+    return render_template('missions.html', missions = missions, longueur = len(missions))
 
 @app.route("/api/user-login", methods=['POST', 'GET'])
 def apiLogin():

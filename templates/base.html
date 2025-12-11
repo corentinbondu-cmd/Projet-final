@@ -7,10 +7,19 @@
     <title>Pimp My Map - {% block title %}{% endblock %}</title>
 </head>
 <body>
-    <nav class="navbar nav-dark bg-dark">
+    <nav class="navbar navbar-expand navbar-light bg-light">
         <a class="navbar-brand" href={{ url_for('index') }}>
-            <img src={{ url_for('static', filename='images/Spinner.svg') }} width="30" height="30" class="d-inline-block align-top" alt="">Mon site
+            <img src={{ url_for('static', filename='images/Spinner.svg') }} width="30" height="30" class="d-inline-block align-top" alt="">
+            
         </a>
+        {% if session['login'] %}
+        <div class="collapse navbar-collapse">
+            <div class="navbar-nav">
+                <a class="nav-link nav-item" href="{{ url_for('map') }}">Map</a>
+                <a class="nav-link nav-item" href="{{ url_for('missions') }}">Missions</a>
+            </div>
+        </div>
+        {% endif %}
     </nav>
     {% block body %}{% endblock %}
     <script src={{ url_for('static', filename='js/jquery-3.7.1.min.js') }}></script>

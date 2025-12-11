@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Administrateur{% endblock %}
+{% block title %}{% if session['login'] %}
+Accueil{% else %}Connexion{% endif %}{% endblock %}
 {% block body %}
 {% if session['login'] %}
+
 <h1>vous êtes {{session['login']}}</h1>
 <button onclick="logout()">deconnection</button>
 {% else %}
