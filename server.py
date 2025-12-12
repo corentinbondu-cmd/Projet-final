@@ -21,19 +21,19 @@ def map():
 @app.route("/liste-missions/")
 def missions():
     missions = MissionDAO(MongoClient()).get_all_mission()
-    missionsId = []
-    for i in range(len(missions)):
-        missionsId.append(missions[i].get_id())
-    newMission = MissionDAO(MongoClient()).add_mission('OTAN', 'Europe', session['login'], '', missionsId)
     return render_template('missions.html', missions = missions, longueur = len(missions))
 
-@app.route("/admin-dashboard/")
+@app.route("/admin/dashboard/")
 def admIndex():
     if session :
         if int(session['rank']) == 0:
             return render_template('admIndex.html')
     return render_template('500.html'), 500
     
+@app.route("/admin/liste-missions/")
+def admMissions():
+    missions = MissionDAO(MongoClient()).get_all_mission()  
+    return render_template('admMissions.html', missions = missions, longueur = len(missions))
 
 @app.route("/api/user-login", methods=['POST', 'GET'])
 def apiLogin():
@@ -68,12 +68,18 @@ def apiAddUserCSV():
 def apiAddUser():
     jsDatas = request.get_json()
     tmpPw = bcrypt.generate_password_hash(jsDatas['password'])
-    newUser = UserDAO(MongoClient()).add_user(jsDatas['firstname'], jsDatas['lastname'], jsDatas['rank'],  jsDatas['grade'], jsDatas['token'],  jsDatas['login'], tmpPw)
+    newUser = UserDAO(MongoClient()).add_user(jsDatas['firstname'], jsDatas['lastname'], jsDatas['rank'],  jsDatas['grade'], '',  jsDatas['login'], tmpPw)
     return jsonify({'isOk' : True})
 
 @app.route("/api/user-logout")
 def apiLogout():
     session.pop('login')
+    return jsonify({'isOk' : True})
+
+@app.route("/api/add-mission/", methods=['POST'])
+def apiAddMission():
+    jsDatas = request.get_json()
+    newMission = MissionDAO(MongoClient()).add_mission(jsDatas['name'], jsDatas['country'], '',  [], [])
     return jsonify({'isOk' : True})
 
 if __name__ == '__main__':

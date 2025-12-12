@@ -1,9 +1,55 @@
 {% extends "base.html" %}
 {% block body %}
 <button onclick="addUserCSV()">user.csv</button>
+<form action="{{ url_for('apiAddUser') }}" method="POST">
+    <input type="text" name="firstname" placeholder="firstname">
+    <input type="text" name="lastname" placeholder="lastname">
+    <input type="text" name="login" placeholder="login">
+    <input type="text" name="password" placeholder="password">
+    <input type="checkbox" name="rank">
+    <select name="grade">
+        <option value="SGT">Sergent</option>
+        <option value="SCH">Sergent-chef</option>
+        <option value="ADJ">Adjudant</option>
+        <option value="ADC">Adjudant-chef</option>
+        <option value="MAJ">Major</option>
+        <option value="LTN">Lieutenant</option>
+        <option value="CNE">Capitaine</option>
+        <option value="CDT">Commandant</option>
+    </select>
+    <button type="submit">Add User</button>
+</form>
+<form action="{{ url_for('apiAddMission') }}" method="POST">
+    <input type="text" name="name" placeholder="name">
+    <input type="text" name="country" placeholder="country">
+    <button type="submit">Add Mission</button>
+</form>
 {% endblock %}
 {% block script %}
 <script>
+    $(document).ready(function(){
+        $('form').submit(function(e){
+            e.preventDefault()
+            var form = $(this);
+            datas = {}
+            $('form :input[type=text]').each(function(){
+                datas[$(this).attr('name')] = $(this).val()
+            })
+            if (form.find('input[type=checkbox]').is(':checked')){
+                datas[form.find('input[type=checkbox]').attr('name')] = 0
+            }else{
+                datas[form.find('input[type=checkbox]').attr('name')] = 1
+            }
+            datas[form.find('select').attr('name')] = form.find('select').val()
+            fetch(form.attr('action'),{
+                method : form.attr('method'),
+                headers : {'Content-Type' : 'application/json; charset=utf-8'},
+                body : JSON.stringify(datas)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+        })
+    })
     function addUserCSV(){
         fetch("{{ url_for('apiAddUserCSV') }}",{
             method : 'POST'

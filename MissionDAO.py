@@ -17,7 +17,13 @@ class MissionDAO:
         db = self.bdd['Project']
         if 'missions' not in db.list_collection_names():
             db.create_collection('missions')
-        newId = db.missions.count_documents({}) + 1
+        if db.missions.count_documents({}) == 0:
+            newId = 0
+        else:
+            newId = list(db.missions.aggregate([
+                {'$sort' : {'_id' : -1}},
+                {'$limit' : 1}
+            ]))[0]['_id'] + 1
         if not list(db.missions.find({'nom' : nom})):
             newMission = MissionDTO(newId, nom, pays, chef, users, branchMissions)
             db.missions.insert_one(newMission.__dict__)
