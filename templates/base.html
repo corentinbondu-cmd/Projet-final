@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" href={{ url_for('static', filename='css/bootstrap.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/leaflet.css') }}/>
     <title>Pimp My Map - {% block title %}{% endblock %}</title>
+    <style>
+        body {
+            overflow-y:hidden;
+            height: 100vh;
+            }
+    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand navbar-light bg-light">
+<body class="container-fluid">
+    <nav class="navbar navbar-expand navbar-light bg-light z-1">
         <a class="navbar-brand" href={{ url_for('index') }}>
             <img src={{ url_for('static', filename='images/Spinner.svg') }} width="30" height="30" class="d-inline-block align-top" alt="">
             
@@ -32,6 +39,7 @@
     {% block body %}{% endblock %}
     <script src={{ url_for('static', filename='js/jquery-3.7.1.min.js') }}></script>
     <script src={{ url_for('static', filename='js/bootstrap.min.js') }}></script>
+    <script src={{ url_for('static', filename='js/leaflet.js') }}></script>
     <script src={{ url_for('static', filename='js/overlay.js') }}></script>
     {% block script %}{% endblock %}
 </body>

@@ -3,30 +3,22 @@
 Accueil{% else %}Connexion{% endif %}{% endblock %}
 {% block body %}
 {% if session['login'] %}
-
 <h1>vous êtes {{session['login']}}</h1>
 <button onclick="logout()">deconnection</button>
 {% else %}
 <form action={{url_for('apiLogin')}} method="POST" id="form">
-    <div class="row m-5 me-5 mb-1 mt-1"></div>
-
-    <div class="row m-5 me-5 mb-1 mt-1">
-    <div class="col-3"></div>
-    <div class="col-6  bg-info text-light me-1">
-        <label for="login">login:</label>
-        <input type="text" id="login" name="login"/>
-    <div class="col-3"></div>
-
-    <div class="row m-5 me-5 mb-1 mt-1"></div>
-    <div class="row m-5 me-5 mb-1 mt-1">
-    <div class="col-3"></div>
-    <div class="col-6  bg-info text-light me-1">
-        <label for="password">password:</label>
-        <input type="text" id="password" name="password"/>
-    <div class="col-3"></div>
+    <div class="row">
+        <div class="col">
+            <label for="login" class="form-label">login:</label>
+            <input type="text" id="login" name="login" class="form-control"/>
+        </div>
+        <div class="col">
+            <label for="password" class="form-label">password:</label>
+            <input type="password" id="password" name="password" class="form-control"/>
+        </div>
     </div>
-    </div>
-    <input type="submit" value="Ajouter" />
+    <div class="row m-3">
+        <input type="submit" value="Connexion" class="col-6 offset-3 btn btn-primary"/>
     </div>
 </form>
 {% endif %}
