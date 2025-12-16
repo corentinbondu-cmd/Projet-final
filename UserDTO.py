@@ -20,3 +20,6 @@ class UserDTO:
     
     def get_id(self):
         return self._id
+    
+    def get_login(self):
+        return self.login

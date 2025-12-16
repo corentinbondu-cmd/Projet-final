@@ -3,6 +3,7 @@ import time, csv
 from flask_bcrypt import Bcrypt
 from UserDAO import UserDAO
 from MissionDAO import MissionDAO
+from SymbolDAO import SymbolDAO
 from pymongo import *
 
 HTTP = 8080
@@ -12,11 +13,13 @@ bcrypt = Bcrypt(app)
 
 @app.route("/")
 def index():
+    SymbolDAO(MongoClient()).add_symbol("otan")
     return render_template('index.html')
 
 @app.route("/map/")
 def map():
-    return render_template('map.html')
+    missions = MissionDAO(MongoClient()).get_all_mission()
+    return render_template('map.html', missions = missions, missionsLen = len(missions))
 
 @app.route("/liste-missions/")
 def missions():
@@ -27,6 +30,7 @@ def missions():
 def admIndex():
     if session :
         if int(session['rank']) == 0:
+            print(UserDAO(MongoClient()).get_mission(session['login']))
             return render_template('admIndex.html')
     return render_template('500.html'), 500
     
@@ -79,7 +83,11 @@ def apiLogout():
 @app.route("/api/add-mission/", methods=['POST'])
 def apiAddMission():
     jsDatas = request.get_json()
-    newMission = MissionDAO(MongoClient()).add_mission(jsDatas['name'], jsDatas['country'], '',  [], [])
+    users = UserDAO(MongoClient()).get_users()
+    userLogin = []
+    for x in range(len(users)):
+        userLogin.append(users[x].get_login())
+    newMission = MissionDAO(MongoClient()).add_mission(jsDatas['name'], jsDatas['country'], session['login'],  userLogin, [])
     return jsonify({'isOk' : True})
 
 if __name__ == '__main__':

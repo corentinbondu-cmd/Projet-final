@@ -17,3 +17,6 @@ class MissionDTO:
     
     def get_id(self):
         return self._id
+    
+    def get_nom(self):
+        return self.nom

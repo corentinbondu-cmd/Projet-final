@@ -10,7 +10,7 @@ class UserDAO:
         result =  list(db.users.find({}))
         userDTOs = []
         for x in result:
-            dto = UserDTO(x['_id'], x['firstname'], x['lastname'], '', '', '', '', '')
+            dto = UserDTO(x['_id'], x['firstname'], x['lastname'], x['rank'], x['grade'], x['token'], x['login'], x['lastname'])
             userDTOs.append(dto)
         return userDTOs
     
@@ -41,3 +41,19 @@ class UserDAO:
         db.users.update_one({'login' : login}, {'$set' : {
             'password' : pw}
         })
+
+    def get_mission(self, login):
+        db = self.bdd['Project']
+        missions = list(db.users.aggregate([{
+            '$lookup' : {
+                'from' : 'missions',
+                'localField' : 'login',
+                'foreignField' : 'chef',
+                'as' : 'user_mission'
+            }},
+            {
+                '$match' : {
+                    'login' : login
+                }
+            }]))
+        return missions
