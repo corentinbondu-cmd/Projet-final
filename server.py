@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, session
+from flask import *
 import time, csv
 from flask_bcrypt import Bcrypt
 from UserDAO import UserDAO
@@ -8,12 +8,11 @@ from pymongo import *
 
 HTTP = 8080
 app = Flask(__name__, static_url_path='/static')
-app.secret_key = b'Y\xf1Xz\x00\xad|a\x1a\x10K'
+app.secret_key = b'Y\xf1Xz\00\xad|a\1a\x10K'
 bcrypt = Bcrypt(app)
 
 @app.route("/")
 def index():
-    SymbolDAO(MongoClient()).add_symbol("otan")
     return render_template('index.html')
 
 @app.route("/map/")
@@ -88,6 +87,15 @@ def apiAddMission():
     for x in range(len(users)):
         userLogin.append(users[x].get_login())
     newMission = MissionDAO(MongoClient()).add_mission(jsDatas['name'], jsDatas['country'], session['login'],  userLogin, [])
+    return jsonify({'isOk' : True})
+
+@app.route("/api/save-symbol/", methods=['POST'])
+def apiSaveSymbol():
+    jsDatas = request.get_json()
+    print(jsDatas)
+    for i in range(len(jsDatas)):
+        tmpData = jsDatas[i]
+        SymbolDAO(MongoClient()).add_symbol(tmpData['Stype'], tmpData['datas'])
     return jsonify({'isOk' : True})
 
 if __name__ == '__main__':
